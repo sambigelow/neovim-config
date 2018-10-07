@@ -1,0 +1,7 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =5
+let g:netrw_dirhist_1='/home/sam/workspace/webCS50/project1'
+let g:netrw_dirhist_2='/home/sam/notes'
+let g:netrw_dirhist_3='/home/sam/.config/nvim'
+let g:netrw_dirhist_4='/home/sam/workspace'
+let g:netrw_dirhist_5='/home/sam/workspace/ruby-playground'

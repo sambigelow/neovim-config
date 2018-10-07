@@ -1,9 +1,24 @@
 call plug#begin()
 
-Plug 'pangloss/vim-javascript'    " standard javascript vim plugin - not sure what i get from it?
-Plug 'mxw/vim-jsx'                " jsx syntax highlighting and more
-Plug 'mattn/emmet-vim'            " makes html easier
-Plug 'kien/ctrlp.vim'             " fuzzy file searcher
+Plug 'pangloss/vim-javascript'      " standard javascript vim plugin - not sure what i get from it?
+Plug 'mxw/vim-jsx'                  " jsx syntax highlighting and more
+Plug 'mattn/emmet-vim'              " makes html easier
+Plug 'kien/ctrlp.vim'               " fuzzy file searcher
+Plug 'tmhedberg/SimpylFold'         " better cold folding 
+Plug 'mhinz/vim-signify'            " git help
+Plug 'vim-scripts/indentpython.vim' " better python indentation
+Plug 'vim-syntastic/syntastic'
+Plug 'elixir-editors/vim-elixir'    " elixir syntax support (maybe more?)
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
+Plug 'tpope/vim-endwise'            " adding automatic 'end'
+Plug 'tpope/vim-surround'           " adding 'surround' operator
+Plug 'tpope/vim-commentary'         " autocomment
 
 call plug#end()
 
@@ -12,6 +27,8 @@ call plug#end()
 " Plugin Configs +++++++++++++++++++++++++++++++++++++++++++++
 "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 let g:jsx_ext_required = 0 " jsx works in .js file
+
+let g:deoplete#enable_at_startup = 1
 
 " use the silver searcher
 if executable('ag')
@@ -22,6 +39,9 @@ if executable('ag')
 
   let g:ctrl_use_caching = 0
 endif
+
+" make signify work less
+let g:signify_vcs_list=['git']
 
 " ctrlp ignore these files
 let g:ctrlp_custom_ignore = { 'dir': '\.git$\|node_modules$' }
@@ -35,14 +55,25 @@ let g:user_emmet_settings = {
   \ }
 
 " use tab key for emmet
-let g:user_emmet_expandabbr_key='<Tab>'
-imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
+" let g:user_emmet_expandabbr_key='<Tab>'
+" imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
+
+" auto indent and make new line when hitting enter in parentheses
+set autoindent
+set smartindent
+
+" autosave
+set autowriteall
+
+" some customization for youCompleteMe
+let g:ycm_autoclose_preview_window_after_completion=1
+map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 " Key Mappings +++++++++++++++++++++++++++++++++++++++++++++++
 "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-let mapleader=" "         " use space as leader key 
+let mapleader=","         " use space as leader key 
 
 inoremap jk <Esc>	        " Remap jk to get out of insert mode
 nnoremap rh :nohl<CR>     " use hh to turn off all highlighting
@@ -51,6 +82,11 @@ nnoremap rh :nohl<CR>     " use hh to turn off all highlighting
 set tabstop=2 
 set shiftwidth=2 
 set expandtab 
+
+" better folding
+set foldmethod=indent
+set foldlevel=99
+nnoremap <space> za
 
 " Better navigation between splits
 nnoremap <C-J> <C-W><C-J>
@@ -93,3 +129,11 @@ noremap <silent> /dd :<C-B>silent <C-E>s/^\V<C-R>=escape(b:comment_leader, '\/')
 
 " copy to system clipboard
 vnoremap <C-c> "*y
+
+" highlight bad whitespace
+highlight BadWhitespace ctermbg=red guibg=darkred
+au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
+
+" set utf8
+set encoding=utf-8
+
